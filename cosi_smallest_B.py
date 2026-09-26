@@ -8,6 +8,7 @@ The randomization is independent of the binomial variable.  At an exact CDF
 level it can degenerate to one integer.  Its largest support value is
 q_B = min{k: P(Binom(B, 1/2) > k) <= alpha/2}.
 The revised search also requires q_B < B.
+smallest_B returns B, a randomized c_star, and its full distribution.
 """
 
 import math
@@ -101,7 +102,7 @@ def largest_support(B, alpha):
     return hi
 
 
-def smallest_B(alpha, gamma, chunk_size=65536):
+def _smallest_B_value(alpha, gamma, chunk_size=65536):
     """Find the smallest B with q_B/B - 1/2 <= gamma AND q_B < B.
 
     alpha : number in (0, 1); the cutoff uses alpha/2 internally.
@@ -178,7 +179,99 @@ def smallest_B(alpha, gamma, chunk_size=65536):
     raise ArithmeticError("No solution within the image's upper bound; check numerical accuracy")
 
 
+def _cutoff_probabilities(B, alpha):
+    """Return q_B and the probabilities at q_B-1 and q_B.
+
+    If S(k)=P(Binom(B,1/2)>k) and m=P(Binom(B,1/2)=q_B), then
+    p_lower=(alpha/2-S(q_B))/m and p_upper=(S(q_B-1)-alpha/2)/m.
+    Hence the randomized upper-tail probability is exactly alpha/2 in
+    exact arithmetic.  No data enter this randomization.
+    """
+    first = 2 - math.frexp(alpha)[1]
+    if B == first:
+        # Here q_B=B-1.  This formula stays accurate even for subnormal alpha
+        # and is exactly zero at a degenerate power-of-two boundary.
+        q = B - 1
+        p_lower = (math.ldexp(alpha, B - 1) - 1.0) / B
+        p_upper = 1.0 - p_lower
+    else:
+        q = largest_support(B, alpha)
+        if B <= 52:
+            # Exact integer numerators handle small degenerate CDF levels.
+            tail_num = sum(math.comb(B, j) for j in range(B - q))
+            a_num, a_den = alpha.as_integer_ratio()
+            denominator = 2 * a_den * math.comb(B, q)
+            numerator = a_num * (1 << B) - 2 * a_den * tail_num
+            p_lower = numerator / denominator
+            p_upper = (denominator - numerator) / denominator
+        else:
+            tails = binom.sf([q, q - 1], B, 0.5)
+            mass = float(binom.pmf(q, B, 0.5))
+            target = alpha / 2.0
+            if target >= 1e-300 and mass >= 1e-300:
+                p_lower = (target - tails[0]) / mass
+                p_upper = (tails[1] - target) / mass
+            else:
+                # Log differences with expm1 avoid underflow and cancellation.
+                logs = [math.log(t) if t >= 1e-300 else _logsf_series(B, k)
+                        for t, k in zip(tails, [q, q - 1])]
+                log_target = math.log(alpha) - math.log(2.0)
+                log_mass = float(binom.logpmf(q, B, 0.5))
+                p_lower = math.exp(log_target - log_mass) * (-math.expm1(logs[0] - log_target))
+                p_upper = math.exp(logs[1] - log_mass) * (-math.expm1(log_target - logs[1]))
+
+    # Roundoff can move an endpoint slightly outside [0,1].  Reject material
+    # violations; compute the larger probability as a complement of the
+    # smaller one to preserve accuracy and make the probabilities sum to one.
+    if not all(math.isfinite(p) and -1e-10 <= p <= 1 + 1e-10
+               for p in (p_lower, p_upper)):
+        raise ArithmeticError("Could not resolve cutoff probabilities in double precision")
+    p_lower, p_upper = (float(min(1.0, max(0.0, p))) for p in (p_lower, p_upper))
+    if p_lower <= p_upper:
+        p_upper = 1.0 - p_lower
+    else:
+        p_lower = 1.0 - p_upper
+    if p_upper <= 0:
+        raise ArithmeticError("Upper support probability is numerically unresolved")
+    return q, p_lower, p_upper
+
+
+def smallest_B(alpha, gamma, chunk_size=65536, *, seed=None):
+    """Return the smallest feasible B together with c*_{B, alpha/2}.
+
+    Parameters
+    ----------
+    alpha, gamma, chunk_size : as in the original search.
+        The two requirements concern q_B, the largest support value:
+        q_B/B - 1/2 <= gamma and q_B < B.
+    seed : optional nonnegative integer or numpy.random.Generator.
+        Controls the independent randomization only; B is deterministic.
+        With seed=None, NumPy creates a fresh generator.  Use a Generator
+        for successive draws from one reproducible random stream.
+
+    Returns
+    -------
+    dict with B, c_star, largest_support, support, probabilities.
+        c_star is one draw, not the largest support value.  The probabilities
+        correspond to the support entries in order; zero-probability support
+        points are omitted.  To obtain only the integer B, use result['B'].
+    """
+    alpha = _check_alpha(alpha)
+    rng = np.random.default_rng(seed)
+    B = _smallest_B_value(alpha, gamma, chunk_size)
+    q, p_lower, p_upper = _cutoff_probabilities(B, alpha)
+    if p_lower == 0:
+        c_star, support, probabilities = q, (q,), (1.0,)
+    else:
+        # Sample the less likely outcome directly for numerical stability.
+        c_star = (q - int(rng.binomial(1, p_lower)) if p_lower <= p_upper
+                  else q - 1 + int(rng.binomial(1, p_upper)))
+        support, probabilities = (q - 1, q), (p_lower, p_upper)
+    return {"B": B, "c_star": c_star, "largest_support": q,
+            "support": support, "probabilities": probabilities}
+
+
 if __name__ == "__main__":
     for gamma in (1/2, 1/3, 1/4, 1/5, 1/10, 1/20, 1/100):
-        B = smallest_B(0.05, gamma)
-        print(f"alpha=0.05, gamma={gamma:.8g}: B={B}, q_B={largest_support(B, 0.05)}")
+        result = smallest_B(0.05, gamma, seed=42)
+        print(f"alpha=0.05, gamma={gamma:.8g}: {result}")
