@@ -6,6 +6,7 @@
 # q_B = min{k: P(Binom(B, 1/2) > k) <= alpha/2}.
 # The randomization may degenerate to a single integer at an exact CDF level.
 # The revised search also requires q_B < B.
+# smallest_B returns B, a randomized c_star, and its full distribution.
 
 .cosi_check_alpha <- function(alpha) {
   if (!is.numeric(alpha) || length(alpha) != 1L ||
@@ -58,7 +59,7 @@ largest_support <- function(B, alpha) {
   hi
 }
 
-smallest_B <- function(alpha, gamma, chunk_size = 65536) {
+.cosi_smallest_B_value <- function(alpha, gamma, chunk_size = 65536) {
   # Find the smallest B with q_B/B - 1/2 <= gamma AND q_B < B.
   # alpha is the overall level: the alpha/2 adjustment is made internally.
   # chunk_size bounds memory consumption during the vectorized search.
@@ -143,9 +144,103 @@ smallest_B <- function(alpha, gamma, chunk_size = 65536) {
   stop("No solution within the image's upper bound; check numerical accuracy")
 }
 
+.cosi_cutoff_probabilities <- function(B, alpha) {
+  # If S(k)=P(Binom(B,1/2)>k), m=P(Binom(B,1/2)=q), and q=q_B, then
+  # p_lower=(alpha/2-S(q))/m and p_upper=(S(q-1)-alpha/2)/m.
+  # Their mixture has upper-tail probability alpha/2 in exact arithmetic.
+  if (2^(1-B) <= alpha && (B == 2 || 2^(2-B) > alpha)) {
+    # At the smallest B allowed by q_B<B, we know q_B=B-1.  This formula
+    # avoids alpha/2 underflow, even for the smallest positive double.
+    q <- B - 1
+    p_lower <- (alpha / 2^(1-B) - 1) / B
+    p_upper <- 1 - p_lower
+  } else {
+    q <- largest_support(B, alpha)
+    if (B <= 52) {
+      # Pascal's triangle yields exact dyadic masses at small B, so exact
+      # CDF levels give a genuinely degenerate cutoff instead of a tiny atom.
+      row <- 1
+      for (j in seq_len(B)) row <- c(row, 0) + c(0, row)
+      mass <- row[q + 1] / 2^B
+      m <- B - q
+      tail <- if (m <= 0) 0 else sum(row[seq_len(m)]) / 2^B
+      p_lower <- (alpha/2 - tail) / mass
+      p_upper <- (tail + mass - alpha/2) / mass
+    } else {
+      # Log upper tails avoid subtracting CDFs from one.  expm1 evaluates
+      # exp(x)-1 accurately when its argument is close to zero.
+      log_tail <- pbinom(c(q, q - 1), B, 0.5,
+                        lower.tail = FALSE, log.p = TRUE)
+      log_target <- log(alpha) - log(2)
+      log_mass <- dbinom(q, B, 0.5, log = TRUE)
+      p_lower <- exp(log_target - log_mass) * (-expm1(log_tail[1] - log_target))
+      p_upper <- exp(log_tail[2] - log_mass) * (-expm1(log_target - log_tail[2]))
+    }
+  }
+
+  # Reject material errors; trim roundoff at endpoints and compute the larger
+  # probability as a complement to keep the probabilities summing to one.
+  p <- c(p_lower, p_upper)
+  if (any(!is.finite(p)) || any(p < -1e-10 | p > 1 + 1e-10)) {
+    stop("Could not resolve cutoff probabilities in double precision")
+  }
+  p <- pmin(1, pmax(0, p))
+  if (p[1] <= p[2]) p[2] <- 1 - p[1] else p[1] <- 1 - p[2]
+  if (p[2] <= 0) stop("Upper support probability is numerically unresolved")
+  list(q = q, probabilities = p)
+}
+
+smallest_B <- function(alpha, gamma, chunk_size = 65536, seed = NULL) {
+  # Return a list with B, c_star, largest_support, support, probabilities.
+  # c_star is ONE randomized draw; B and the distribution are deterministic.
+  # The constraints concern the largest support value, not an individual draw.
+  # Use result$B to obtain the integer returned by the previous version.
+  #
+  # seed=NULL uses R's current random stream (so set.seed() works normally).
+  # A supplied seed makes a reproducible local draw and restores the caller's
+  # RNG state.  For successive draws, call set.seed() once, then omit seed.
+  if (!is.null(seed) && (!is.numeric(seed) || length(seed) != 1L ||
+      !is.finite(seed) || seed < 0 || seed != floor(seed) ||
+      seed > .Machine$integer.max)) {
+    stop("seed must be NULL or an integer between 0 and .Machine$integer.max")
+  }
+  B <- .cosi_smallest_B_value(alpha, gamma, chunk_size)
+  calibration <- .cosi_cutoff_probabilities(B, alpha)
+  q <- calibration$q
+  p <- calibration$probabilities
+
+  if (!is.null(seed)) {
+    had_seed <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+    if (had_seed) old_seed <- get(".Random.seed", envir = .GlobalEnv)
+    on.exit({
+      if (had_seed) {
+        assign(".Random.seed", old_seed, envir = .GlobalEnv)
+      } else if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
+        rm(".Random.seed", envir = .GlobalEnv)
+      }
+    }, add = TRUE)
+    set.seed(seed)
+  }
+  if (p[1] == 0) {
+    c_star <- q
+    support <- q
+    probabilities <- 1
+  } else {
+    # Sample the less likely outcome directly for numerical stability.
+    c_star <- if (p[1] <= p[2]) q - rbinom(1, 1, p[1]) else
+                                q - 1 + rbinom(1, 1, p[2])
+    support <- c(q - 1, q)
+    probabilities <- p
+  }
+  list(B = B, c_star = c_star, largest_support = q,
+       support = support, probabilities = probabilities)
+}
+
 # Examples:
-# smallest_B(0.05, 1/2)       # 6 (previously 1 without the strict condition)
-# smallest_B(0.05, 1/3)       # 6
-# smallest_B(0.05, 0.10)      # 90
-# smallest_B(0.05, 0.01)      # 9551
+# result <- smallest_B(0.05, 1/3, seed = 42)
+# result$B                   # 6
+# result$c_star              # a draw in {4,5}
+# result$support             # c(4,5)
+# result$probabilities       # c(0.1,0.9)
+# smallest_B(0.05, 0.10)$B   # 90
 # largest_support(6, 0.05)   # 5
