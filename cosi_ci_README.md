@@ -653,7 +653,7 @@ starting value, for $L<m\log2$, is
 
 $$
 t=\tan\left(\frac{L}{m\sqrt3}\right),\qquad
-\lambda_0=\sqrt{\frac{2\sqrt3\,m\,t}{v(1-\sqrt3\,t)}}.
+\lambda_0=\sqrt{\frac{2\sqrt3 m t}{v(1-\sqrt3 t)}}.
 $$
 
 The denominator is positive because $L/m<\log2<\pi/(2\sqrt3)$. In exact
@@ -708,7 +708,7 @@ Because $\psi''$ decreases on $[0,\infty)$,
 
 $$
 H(\lambda_{j+1})-H(\lambda_j)
-=\int_{\lambda_j}^{\lambda_{j+1}}u\psi''(u)\,du
+=\int_{\lambda_j}^{\lambda_{j+1}}u\psi''(u) du
 \le\frac{\psi''(\lambda_j)}2(\lambda_{j+1}^2-\lambda_j^2)
 =L-H(\lambda_j).
 $$
@@ -811,12 +811,12 @@ For reference, the raw tail moments can be expressed through binomial tails:
 
 $$
 \mathbb{E}[Y\mathbf{1}(Y\ge k)]
-=mp\,\mathbb{P}(\text{Bin}(m-1,p)\ge k-1),
+=mp \mathbb{P}(\text{Bin}(m-1,p)\ge k-1),
 $$
 
 $$
 \mathbb{E}[Y(Y-1)\mathbf{1}(Y\ge k)]
-=m(m-1)p^2\,\mathbb{P}(\text{Bin}(m-2,p)\ge k-2).
+=m(m-1)p^2 \mathbb{P}(\text{Bin}(m-2,p)\ge k-2).
 $$
 
 The second identity is used only for $m\ge2$. To avoid cancellation, the
@@ -848,7 +848,7 @@ $$
 Consequently,
 
 $$
-r_G=\sqrt v\,\Phi^{-1}\left(1-\frac{\alpha}{2C_*}\right).
+r_G=\sqrt v \Phi^{-1}\left(1-\frac{\alpha}{2C_*}\right).
 $$
 
 The constant is optimal uniformly over coefficient vectors and thresholds;
@@ -869,7 +869,7 @@ $\phi(x)/\overline\Phi(x)\le x+x^{-1}$. Let
 $$
 A(x)=1+C_P\frac{x+x^{-1}}{9+x^2},\qquad
 z=\Phi^{-1}(1-\alpha/2),\qquad
-r_P=\sqrt v\,\Phi^{-1}\left(1-\frac{\alpha}{2A(z)}\right).
+r_P=\sqrt v \Phi^{-1}\left(1-\frac{\alpha}{2A(z)}\right).
 $$
 
 Indeed, $Q(x)\le A(x)\overline\Phi(x)$ and
