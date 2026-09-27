@@ -128,7 +128,7 @@ $$
 $$
 
 Here the independently randomized binomial cutoff obeys
-$\mathbb{P}\{\text{Bin}(B,1/2)\le c^*_{B,\alpha/2}\}=1-\alpha/2$.
+$\mathbb{P}(\text{Bin}(B,1/2)\le c^*_{B,\alpha/2})=1-\alpha/2$.
 The search uses finite-sample quantile bounds to remove impossible ranges,
 then checks the remaining integers in increasing order. It does not assume
 that feasibility is monotone in B. B selection uses neither data values nor
