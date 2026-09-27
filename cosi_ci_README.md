@@ -332,7 +332,7 @@ Both symmetry and normality in `cosi_ci` call this helper.
 For general scores, it calibrates
 
 $$
-G=\sum_{i=1}^B h(i)\xi_i,\qquad \xi_i\overset{\mathrm{iid}}{\sim}\operatorname{Ber}(1/2),
+G=\sum_{i=1}^B h(i)\xi_i,\qquad \xi_i\overset{\mathrm{iid}}{\sim}\text{Ber}(1/2),
 $$
 
 using the two-sided probability
