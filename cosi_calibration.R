@@ -159,112 +159,192 @@ cosi_kappa <- function(h, alpha = 0.05, seed = NULL, randomized = TRUE,
   out
 }
 
-# Compute a conservative signed-rank cutoff using the smallest of four valid tail radii.
+# Add these four private helpers after .cosi_log_cosh in cosi_calibration.R,
+# then replace only .cosi_concentration_calibration with the definition below.
+# All other functions stay in place.
+
+# Compute the log MGF, lambda*psi'(lambda)-psi(lambda), and psi''(lambda).
+# Nonnegative weights and stable exponential formulas avoid cosh overflow.
+.cosi_rademacher_cgf <- function(weights, lambda) {
+  z <- lambda*weights
+  e <- exp(-2*z)
+  log_mgf <- sum(.cosi_log_cosh(z))
+  entropy <- log(2)-log1p(e)-2*z*e/(1+e)
+  small <- z < 1
+  entropy[small] <- z[small]*tanh(z[small])-.cosi_log_cosh(z[small])
+  curvature <- sum(weights^2*4*e/(1+e)^2)
+  list(log_mgf=log_mgf, entropy=sum(entropy), curvature=curvature)
+}
+
+# Compute a conservative Chernoff radius using an analytical starting value
+# and three fixed refinements when the optimizer is finite; no root search.
+# gap_bound controls the error relative to the optimal Chernoff radius in
+# exact arithmetic, with an extra floating-point allowance in the result.
+.cosi_finite_chernoff_radius <- function(weights, log_level) {
+  variance <- sum(weights^2)
+  m <- sum(weights > 0)
+  L <- log(2)-log_level
+  lambda <- sqrt(2*L/variance)
+  finite_optimum <- L < m*log(2)
+  if (finite_optimum) {
+    t <- tan(L/(m*sqrt(3)))
+    lambda <- sqrt((m/variance)*(2*sqrt(3)*t)/(1-sqrt(3)*t))
+  }
+  candidates <- numeric(0)
+  for (j in seq_len(if (finite_optimum) 4L else 1L)) {
+    values <- .cosi_rademacher_cgf(weights, lambda)
+    K <- values$log_mgf
+    H <- values$entropy
+    curvature <- values$curvature
+    candidates <- c(candidates,lambda)
+    radius <- (L+K)/lambda
+    gap <- if (finite_optimum) max(0,L-H)/lambda+
+      1024*.Machine$double.eps*max(1,radius) else Inf
+    if (j == 4L || !finite_optimum || curvature <= 0) break
+    square <- lambda^2+2*max(0,L-H)/curvature
+    if (!is.finite(square)) break
+    lambda <- sqrt(square)
+  }
+  list(radius=radius, lambda=tail(candidates,1L), log_mgf=K,
+       gap_bound=gap, lambdas=candidates, refinements=length(candidates)-1L)
+}
+
+# Invert the binomial positive-part second-moment bound by scanning its cells.
+# Return the quantile, minimizing shift, and guarded log second moment.
+# Log probabilities and a conditional-variance recurrence avoid underflow
+# and cancellation from subtracting nearly equal raw second moments.
+.cosi_binomial_p2_quantile <- function(n, p, log_beta) {
+  guard <- 256*.Machine$double.eps*(n+1)
+  if (log_beta <= n*log(p)+guard) return(NULL)
+  log_pmf <- dbinom(0:n,n,p,log=TRUE)
+  tail_log <- -Inf
+  delta <- variance <- 0
+  best <- NULL
+  for (k in seq.int(n,0)) {
+    atom_log <- log_pmf[k+1L]
+    if (k == n) {
+      tail_log <- atom_log
+    } else {
+      combined <- max(atom_log,tail_log)+log1p(exp(-abs(atom_log-tail_log)))
+      tail_weight <- exp(tail_log-combined)
+      atom_weight <- exp(atom_log-combined)
+      previous_mean <- delta+1
+      variance <- tail_weight*variance+tail_weight*atom_weight*previous_mean^2
+      delta <- tail_weight*previous_mean
+      tail_log <- combined
+    }
+    # delta is E[Y-k | Y >= k]; variance is Var(Y | Y >= k).
+    log_ratio <- tail_log+guard-log_beta
+    if (log_ratio > 0 && variance > 0) {
+      log_denominator <- if (log_ratio < 50) log(expm1(log_ratio)) else
+        log_ratio+log1p(-exp(-log_ratio))
+      log_gap <- (log(variance)-log_denominator)/2
+      if (k > 0 && log_gap >= log(delta+1)) {
+        offset <- -1
+      } else {
+        offset <- min(0,delta-exp(log_gap))
+      }
+    } else if (k > 0) {
+      offset <- -1
+    } else next
+    moment <- (delta-offset)^2+variance
+    if (moment <= 0 || !is.finite(moment)) next
+    log_moment <- tail_log+log(moment)+guard
+    log_radius <- (log_moment-log_beta)/2
+    if (log_radius >= log(.Machine$double.xmax)) next
+    shift <- k+offset
+    quantile <- shift+exp(log_radius)
+    if (is.null(best) || quantile < best$quantile) {
+      best <- list(quantile=quantile,shift=shift,log_moment=log_moment)
+    }
+  }
+  best
+}
+
+# Construct the matching-variance binomial comparison and two-sided radius.
+# Retain the shift and moment to check the final implemented rejection bound.
+.cosi_binomial_p2_radius <- function(weights, log_level) {
+  weights <- weights[weights > 0]
+  m <- length(weights)
+  variance <- sum(weights^2)
+  y <- max(weights)
+  ratio <- variance/(m*y^2)
+  p <- ratio/(1+ratio)
+  step <- y*(1+ratio)
+  inverse <- .cosi_binomial_p2_quantile(m,p,log_level-log(2))
+  if (is.null(inverse)) return(list(radius=Inf,shift=0,log_moment=Inf))
+  list(radius=step*(inverse$quantile-m*p),shift=step*(inverse$shift-m*p),
+       log_moment=2*log(step)+inverse$log_moment)
+}
+
+# Calibrate a deterministic conservative cutoff from analytical concentration
+# radii, three fixed Chernoff refinements, and a binomial P2 comparison.
+# Preserve existing output fields and add diagnostics for the finite checks.
 .cosi_concentration_calibration <- function(scores, alpha, control,
-                                            reason = "general real scores") {
-  # Conservative calibration, with no enumeration or Monte Carlo sampling.
-  # Normalize so T=(G-N/2)/(N/2)=sum w_i*Rademacher_i. This prevents
-  # overflow in sum(scores^2) and makes the optimization scale invariant.
+                                             reason="general real scores") {
   N <- sum(scores)
-  if (N == 0) return(.cosi_kappa_law(-1, 0, 0, 1, alpha, "zero-scores"))
+  if (N == 0) return(.cosi_kappa_law(-1,0,0,1,alpha,"zero-scores"))
   mu <- N/2
   w <- scores[scores > 0]/N
   variance <- sum(w^2)
   sd <- sqrt(variance)
   log_alpha <- log(alpha)
-  L <- log(2) - log_alpha
+  L <- log(2)-log_alpha
+  chernoff <- .cosi_finite_chernoff_radius(w,log_alpha)
+  comparison <- .cosi_binomial_p2_radius(w,log_alpha)
 
-  # Four rigorous radii for P(|T| >= radius) <= alpha. The Gaussian
-  # comparison is Bentkus--Dzindzalieta, Theorem 1.1 (2015), with its
-  # optimal universal multiplicative constant; it is NOT a normal CLT.
-  # https://arxiv.org/abs/1307.3451
-  log_C <- -log(4) - pnorm(sqrt(2), lower.tail = FALSE, log.p = TRUE)
+  # Sharp constant-factor Gaussian comparison, not a normal approximation.
+  log_C <- -log(4)-pnorm(sqrt(2),lower.tail=FALSE,log.p=TRUE)
+  r_gaussian <- sd*qnorm(log_alpha-log(2)-log_C,lower.tail=FALSE,log.p=TRUE)
   r_hoeffding <- sd*sqrt(2*L)
-  r_gaussian <- sd*qnorm(log_alpha - log(2) - log_C,
-                         lower.tail = FALSE, log.p = TRUE)
   r_chebyshev <- sd*exp(-log_alpha/2)
-  # At alpha=1/2 these two bounds both equal sd*sqrt(2), by the definition
-  # of C_*. Resolve that exact tie identically across R and SciPy.
-  if (alpha == 0.5) r_gaussian <- r_chebyshev <- sd*sqrt(2)
+  if (alpha == .5) r_gaussian <- r_chebyshev <- sd*sqrt(2)
 
-  # Chernoff radius: [L + sum log cosh(lambda*w_i)]/lambda.
-  # Its derivative changes sign where lambda*K'(lambda)-K(lambda)=L.
-  # For large z, evaluate z*tanh(z)-log(cosh(z)) without subtracting
-  # two large, nearly equal numbers. Zero normalized weights are harmless.
-  slope <- function(lambda) {
-    z <- lambda*w
-    part <- numeric(length(z))
-    small <- z < 20
-    part[small] <- z[small]*tanh(z[small]) - .cosi_log_cosh(z[small])
-    zz <- z[!small]
-    e <- exp(-2*zz)
-    part[!small] <- log(2) - log1p(e) - 2*zz*e/(1 + e)
-    sum(part) - L
-  }
-  lambda_H <- sqrt(2*L/variance)
-  candidates <- lambda_H
-  hi <- lambda_H
-  f_hi <- slope(hi)
-  for (iteration in seq_len(control$max_iterations)) {
-    if (f_hi >= 0 || hi > .Machine$double.xmax/2) break
-    hi <- 2*hi
-    f_hi <- slope(hi)
-  }
-  candidates <- c(candidates, hi)
-  if (is.finite(f_hi) && f_hi >= 0) {
-    root <- tryCatch(uniroot(slope, c(0, hi), f.lower = -L, f.upper = f_hi,
-                            tol = sqrt(.Machine$double.eps),
-                            maxiter = control$max_iterations,
-                            check.conv = TRUE)$root,
-                     error = function(e) NA_real_)
-    if (is.finite(root) && root > 0) candidates <- c(candidates, root)
-  }
-  # Every FINITE lambda gives a valid radius, even if the optimizer does
-  # not converge. Do not replace lambda by infinity: at the edge of a
-  # discrete support, a limiting radius can change an inclusive tail event.
-  candidate_radii <- vapply(candidates, function(lambda)
-    L/lambda + sum(.cosi_log_cosh(lambda*w)/lambda), numeric(1))
-  chosen <- which.min(candidate_radii)
-  lambda <- candidates[chosen]
-  K <- sum(.cosi_log_cosh(lambda*w))
-  radii <- c(chernoff = candidate_radii[chosen], gaussian = r_gaussian,
-             hoeffding = r_hoeffding, chebyshev = r_chebyshev)
+  # Explicit conservative inversion of Pinelis's Q bound via Mills's ratio.
+  C_P <- 5*sqrt(2*pi*exp(1))*(2*pnorm(1)-1)
+  # A lower bound for z avoids cancellation as alpha approaches one.
+  z <- if (alpha > .9) sqrt(pi/2)*(1-alpha) else
+    qnorm(log_alpha-log(2),lower.tail=FALSE,log.p=TRUE)
+  A <- 1+C_P*(z+1/z)/(9+z^2)
+  r_pinelis <- sd*qnorm(log_alpha-log(2)-log(A),lower.tail=FALSE,log.p=TRUE)
+  # Tomaszewski controls a strict tail at one standard deviation.
+  r_tomaszewski <- if (alpha >= .5) sd*(1+512*.Machine$double.eps) else Inf
+  radii <- c(chernoff=chernoff$radius,binomial_p2=comparison$radius,
+             gaussian=r_gaussian,pinelis=r_pinelis,hoeffding=r_hoeffding,
+             chebyshev=r_chebyshev,tomaszewski=r_tomaszewski)
   best <- which.min(radii)
-
-  # A smaller kappa gives a wider interval. Subtract a numerical cushion
-  # that also covers the Walsh cumulative-weight tolerance used below.
-  # This is a double-precision safeguard, not an arbitrary-precision proof.
-  cushion <- (control$mass_tol + 256*.Machine$double.eps)*max(1, N)
-  raw_kappa <- mu*(1 - radii[best])
+  cushion <- (control$mass_tol+256*.Machine$double.eps)*max(1,N)
+  raw_kappa <- mu*(1-radii[best])
   kappa <- if (is.finite(raw_kappa) && raw_kappa > cushion)
-             unname(raw_kappa - cushion) else -1
-
-  # Report a bound for the rejection event of the IMPLEMENTED interval.
-  # Account for a possibly inward Walsh mass tolerance when checking it.
+    unname(raw_kappa-cushion) else -1
   log_bound <- -Inf
   if (kappa >= 0) {
-    effective_kappa <- kappa + control$mass_tol*max(1, N)
-    r <- (mu - effective_kappa)/mu
-    bounds <- c(chernoff = log(2) + K - lambda*r,
-                gaussian = log(2) + log_C +
-                  pnorm(r/sd, lower.tail = FALSE, log.p = TRUE),
-                hoeffding = log(2) - r^2/(2*variance),
-                chebyshev = log(variance) - 2*log(r))
-    log_bound <- min(0, bounds)
-    # If extreme floating-point arithmetic defeats the check, the whole
-    # real line remains a valid deterministic fallback.
+    effective_kappa <- kappa+control$mass_tol*max(1,N)
+    r <- (mu-effective_kappa)/mu
+    x <- r/sd
+    q_parts <- c(pnorm(x,lower.tail=FALSE,log.p=TRUE),
+                 log(C_P)-x^2/2-log(2*pi)/2-log(9+x^2))
+    log_Q <- max(q_parts)+log1p(exp(-abs(diff(q_parts))))
+    bounds <- c(log(2)+chernoff$log_mgf-chernoff$lambda*r,
+                log(2)+log_C+pnorm(x,lower.tail=FALSE,log.p=TRUE),
+                log(2)+log_Q,log(2)-r^2/(2*variance),log(variance)-2*log(r))
+    if (is.finite(comparison$log_moment) && r > comparison$shift) {
+      bounds <- c(bounds,log(2)+comparison$log_moment-2*log(r-comparison$shift))
+    }
+    if (r > sd) bounds <- c(bounds,-log(2))
+    log_bound <- min(0,bounds)
     if (is.na(log_bound) || log_bound > log_alpha) {
       kappa <- -1
       log_bound <- -Inf
     }
   }
-  list(support = kappa, probabilities = 1, rejection_probabilities = NA_real_,
-       engine = "concentration", exact = FALSE, bound_used = names(radii)[best],
-       rejection_probability_bound = exp(log_bound),
-       log_rejection_probability_bound = log_bound,
-       radius = unname(mu*radii[best]), radius_fraction = unname(radii[best]),
-       candidate_radii = radii*mu, lambda = lambda,
-       numerical_cushion = cushion, fallback_reason = reason)
+  list(support=kappa,probabilities=1,rejection_probabilities=NA_real_,
+       engine="concentration",exact=FALSE,bound_used=names(radii)[best],
+       rejection_probability_bound=exp(log_bound),log_rejection_probability_bound=log_bound,
+       radius=unname(mu*radii[best]),radius_fraction=unname(radii[best]),
+       candidate_radii=radii*mu,numerical_cushion=cushion,fallback_reason=reason,
+       lambda=chernoff$lambda,lambda_candidates=chernoff$lambdas,
+       chernoff_refinements=chernoff$refinements,chernoff_gap_bound=mu*chernoff$gap_bound)
 }
 
 # Convert a discrete score-sum distribution into the randomized signed-rank cutoff law.
