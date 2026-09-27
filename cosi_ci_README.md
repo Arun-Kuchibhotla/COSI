@@ -720,11 +720,11 @@ $$
 r(\lambda_{j+1})\le r(\lambda_j).
 $$
 
-At the optimum, $r(\lambda_0)=\psi'(\lambda_0)$. Monotonicity of $\psi'$
+At the optimum, $r(\lambda_{\infty})=\psi'(\lambda_{\infty})$. Monotonicity of $\psi'$
 also yields the computable bound
 
 $$
-0\le r(\lambda_j)-r(\lambda_0)
+0\le r(\lambda_j)-r(\lambda_{\infty})
 \le r(\lambda_j)-\psi'(\lambda_j)
 =\frac{L-H(\lambda_j)}{\lambda_j}.
 $$
