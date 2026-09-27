@@ -615,7 +615,7 @@ $$
 Then $r'(\lambda)=(H(\lambda)-L)/\lambda^2$ and
 $H'(\lambda)=\lambda\psi''(\lambda)>0$. Also $H(0)=0$ and
 $H(\infty)=m\log2$. Hence, when $L<m\log2$, there is a unique finite
-minimizer $\lambda_*$ characterized by $H(\lambda_*)=L$.
+minimizer $\lambda_0$ characterized by $H(\lambda_0)=L$.
 
 For arbitrary real scores this characterization does not provide a general
 closed-form inverse. For equal positive scores $b_i=b$, optimizing the
@@ -660,7 +660,7 @@ The denominator is positive because $L/m<\log2<\pi/(2\sqrt3)$. In exact
 arithmetic,
 
 $$
-\lambda_H\le\lambda_0\le\lambda_*,\qquad
+\lambda_H\le\lambda_0\le\lambda_0,\qquad
 r(\lambda_0)\le r(\lambda_H).
 $$
 
@@ -716,15 +716,15 @@ $$
 It follows inductively that
 
 $$
-\lambda_j\le\lambda_{j+1}\le\lambda_*,\qquad
+\lambda_j\le\lambda_{j+1}\le\lambda_0,\qquad
 r(\lambda_{j+1})\le r(\lambda_j).
 $$
 
-At the optimum, $r(\lambda_*)=\psi'(\lambda_*)$. Monotonicity of $\psi'$
+At the optimum, $r(\lambda_0)=\psi'(\lambda_0)$. Monotonicity of $\psi'$
 also yields the computable bound
 
 $$
-0\le r(\lambda_j)-r(\lambda_*)
+0\le r(\lambda_j)-r(\lambda_0)
 \le r(\lambda_j)-\psi'(\lambda_j)
 =\frac{L-H(\lambda_j)}{\lambda_j}.
 $$
