@@ -615,7 +615,7 @@ $$
 Then $r'(\lambda)=(H(\lambda)-L)/\lambda^2$ and
 $H'(\lambda)=\lambda\psi''(\lambda)>0$. Also $H(0)=0$ and
 $H(\infty)=m\log2$. Hence, when $L<m\log2$, there is a unique finite
-minimizer $\lambda_0$ characterized by $H(\lambda_0)=L$.
+minimizer $\lambda_{\infty}$ characterized by $H(\lambda_{\infty})=L$.
 
 For arbitrary real scores this characterization does not provide a general
 closed-form inverse. For equal positive scores $b_i=b$, optimizing the
