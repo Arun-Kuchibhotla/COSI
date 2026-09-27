@@ -331,6 +331,10 @@
   .cosi_mitm_calibration(positive, N, alpha, control)
 }
 
+## The following function takes an interval and returns
+## one-sided or two-sided open interval depending on the last two arguments.
+## This is needed for when method= symmetric or normal.
+
 .cosi_interval <- function(lower, upper, lower_closed = TRUE, upper_closed = TRUE) {
   # Closed/open endpoints matter after projecting lexicographic inequalities
   # onto the real line.  Retain the endpoints even if they describe the empty set.
