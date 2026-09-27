@@ -660,7 +660,7 @@ The denominator is positive because $L/m<\log2<\pi/(2\sqrt3)$. In exact
 arithmetic,
 
 $$
-\lambda_H\le\lambda_0\le\lambda_0,\qquad
+\lambda_H\le\lambda_0\le\lambda_{\infty},\qquad
 r(\lambda_0)\le r(\lambda_H).
 $$
 
@@ -716,7 +716,7 @@ $$
 It follows inductively that
 
 $$
-\lambda_j\le\lambda_{j+1}\le\lambda_0,\qquad
+\lambda_j\le\lambda_{j+1}\le\lambda_{\infty},\qquad
 r(\lambda_{j+1})\le r(\lambda_j).
 $$
 
