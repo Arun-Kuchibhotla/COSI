@@ -125,7 +125,7 @@ $$
 \left|\frac{B-q_B}{B}-\frac{1}{2}\right|\le\gamma,
 $$
 $$
-q_B<B,
+q_B\le B,
 \quad q_B=\max\text{supp}(c^*_{B,\alpha/2}).
 $$
 
