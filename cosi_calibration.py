@@ -171,13 +171,127 @@ def _log_cosh(x):
     return out
 
 
-# Compute a conservative signed-rank cutoff using the smallest of four valid tail radii.
-def _concentration_calibration(scores, alpha, control, reason="general real scores"):
-    """Tightest computed radius from four finite-sample-valid inequalities.
+# Compute the log MGF, lambda*psi'(lambda)-psi(lambda), and psi''(lambda).
+# The input weights are nonnegative; the formulas avoid large-cosh overflow.
+def _rademacher_cgf(weights, lam):
+    z = lam*np.asarray(weights, dtype=float)
+    e = np.exp(-2*z)
+    log_mgf = math.fsum(_log_cosh(z))
+    entropy = math.log(2)-np.log1p(e)-2*z*e/(1+e)
+    small = z < 1
+    entropy[small] = z[small]*np.tanh(z[small])-_log_cosh(z[small])
+    curvature = math.fsum(weights*weights*4*e/(1+e)**2)
+    return log_mgf, math.fsum(entropy), curvature
 
-    Work with T=(G-N/2)/(N/2), whose coefficients sum to one. Every finite
-    Chernoff parameter is valid, even if numerical optimization does not finish.
-    """
+
+# Compute a valid Chernoff radius using an analytical starting value and
+# exactly three refinements when a finite optimizer exists; no root search.
+# gap_bound bounds the error relative to the optimal Chernoff radius in exact
+# arithmetic, with an extra floating-point allowance in the returned value.
+def _finite_chernoff_radius(weights, log_level):
+    weights = np.asarray(weights, dtype=float)
+    variance = math.fsum(weights*weights)
+    m = int(np.count_nonzero(weights))
+    L = math.log(2)-log_level
+    lam = math.sqrt(2*L/variance)
+    finite_optimum = L < m*math.log(2)
+    if finite_optimum:
+        t = math.tan(L/(m*math.sqrt(3)))
+        lam = math.sqrt((m/variance)*(2*math.sqrt(3)*t)/(1-math.sqrt(3)*t))
+    candidates = []
+    for j in range(4 if finite_optimum else 1):
+        K, H, curvature = _rademacher_cgf(weights, lam)
+        candidates.append(lam)
+        radius = (L+K)/lam
+        gap = (max(0.0, L-H)/lam+1024*EPS*max(1.0, radius)
+               if finite_optimum else math.inf)
+        if j == 3 or not finite_optimum or curvature <= 0:
+            break
+        square = lam*lam+2*max(0.0, L-H)/curvature
+        if not math.isfinite(square):
+            break  # The last finite parameter still gives a valid bound.
+        lam = math.sqrt(square)
+    return dict(radius=radius, lam=candidates[-1], log_mgf=K,
+                gap_bound=gap, lambdas=np.asarray(candidates),
+                refinements=len(candidates)-1)
+
+
+# Invert the binomial positive-part second-moment bound by a finite cell scan.
+# Return a quantile, its minimizing shift, and a guarded log second moment.
+# Tail moments use log probabilities and a conditional-variance recurrence,
+# avoiding tail underflow and subtraction of nearly equal raw moments.
+def _binomial_p2_quantile(n, p, log_beta):
+    guard = 256*EPS*(n+1)
+    if log_beta <= n*math.log(p)+guard:
+        return None  # The comparison's upper endpoint cannot improve a finite CI.
+    log_pmf = binom.logpmf(np.arange(n+1), n, p)
+    tail_log = -math.inf
+    delta = variance = 0.0
+    best = None
+    for k in range(n, -1, -1):
+        atom_log = float(log_pmf[k])
+        if k == n:
+            tail_log = atom_log
+        else:
+            combined = float(np.logaddexp(atom_log, tail_log))
+            tail_weight = math.exp(tail_log-combined)
+            atom_weight = math.exp(atom_log-combined)
+            previous_mean = delta+1
+            variance = (tail_weight*variance+
+                        tail_weight*atom_weight*previous_mean**2)
+            delta = tail_weight*previous_mean
+            tail_log = combined
+        # Conditional mean of Y-k is delta; variance is Var(Y | Y >= k).
+        log_ratio = tail_log+guard-log_beta
+        if log_ratio > 0 and variance > 0:
+            log_denominator = (math.log(math.expm1(log_ratio)) if log_ratio < 50
+                               else log_ratio+math.log1p(-math.exp(-log_ratio)))
+            log_gap = (math.log(variance)-log_denominator)/2
+            if k > 0 and log_gap >= math.log(delta+1):
+                offset = -1.0
+            else:
+                offset = min(0.0, delta-math.exp(log_gap))
+        elif k > 0:
+            offset = -1.0
+        else:
+            continue
+        moment = (delta-offset)**2+variance
+        if moment <= 0 or not math.isfinite(moment):
+            continue
+        log_moment = tail_log+math.log(moment)+guard
+        log_radius = (log_moment-log_beta)/2
+        if log_radius >= math.log(np.finfo(float).max):
+            continue
+        shift = k+offset
+        quantile = shift+math.exp(log_radius)
+        if best is None or quantile < best["quantile"]:
+            best = dict(quantile=quantile, shift=shift, log_moment=log_moment)
+    return best
+
+
+# Construct the matching-variance binomial comparison and its two-sided radius.
+# The retained shift and moment certify the bound at the final implemented cutoff.
+def _binomial_p2_radius(weights, log_level):
+    weights = np.asarray(weights, dtype=float)
+    weights = weights[weights > 0]
+    m = len(weights)
+    variance = math.fsum(weights*weights)
+    y = float(weights.max())
+    ratio = variance/(m*y*y)
+    p, step = ratio/(1+ratio), y*(1+ratio)
+    inverse = _binomial_p2_quantile(m, p, log_level-math.log(2))
+    if inverse is None:
+        return dict(radius=math.inf, shift=0.0, log_moment=math.inf)
+    radius = step*(inverse["quantile"]-m*p)
+    shift = step*(inverse["shift"]-m*p)
+    return dict(radius=radius, shift=shift,
+                log_moment=2*math.log(step)+inverse["log_moment"])
+
+
+# Calibrate a deterministic conservative cutoff from analytical concentration
+# radii, three fixed Chernoff refinements, and a binomial P2 comparison.
+# All existing return fields are preserved; lambda diagnostics are added.
+def _concentration_calibration(scores, alpha, control, reason="general real scores"):
     scores = np.asarray(scores, dtype=float)
     N = math.fsum(scores)
     if N == 0:
@@ -188,51 +302,29 @@ def _concentration_calibration(scores, alpha, control, reason="general real scor
     sd = math.sqrt(variance)
     log_alpha = math.log(alpha)
     L = math.log(2)-log_alpha
-    # Bentkus--Dzindzalieta (2015), Theorem 1.1, optimal constant-factor
-    # Gaussian comparison. This is an inequality, not a normal approximation.
+    chernoff = _finite_chernoff_radius(w, log_alpha)
+    comparison = _binomial_p2_radius(w, log_alpha)
+
+    # Sharp constant-factor Gaussian comparison (Bentkus--Dzindzalieta).
     log_C = -math.log(4)-float(log_ndtr(-math.sqrt(2)))
-    r_hoeffding = sd*math.sqrt(2*L)
     r_gaussian = -sd*float(ndtri_exp(log_alpha-math.log(2)-log_C))
+    r_hoeffding = sd*math.sqrt(2*L)
     r_chebyshev = sd*math.exp(-log_alpha/2)
-    # Mathematical tie implied by C_*; avoid a library-rounding tie-break.
     if alpha == .5:
         r_gaussian = r_chebyshev = sd*math.sqrt(2)
 
-    # Evaluate the derivative equation used to minimize the Chernoff radius.
-    def slope(lam):
-        z = lam*w
-        part = np.empty_like(z)
-        small = z < 20
-        part[small] = z[small]*np.tanh(z[small])-_log_cosh(z[small])
-        zz = z[~small]
-        e = np.exp(-2*zz)
-        part[~small] = math.log(2)-np.log1p(e)-2*zz*e/(1+e)
-        return math.fsum(part)-L
-
-    lambda_H = math.sqrt(2*L/variance)
-    candidates = [lambda_H]
-    hi = lambda_H
-    f_hi = slope(hi)
-    for _ in range(control["max_iterations"]):
-        if f_hi >= 0 or hi > np.finfo(float).max/2:
-            break
-        hi *= 2
-        f_hi = slope(hi)
-    candidates.append(hi)
-    if math.isfinite(f_hi) and f_hi >= 0:
-        try:
-            root = brentq(slope, 0, hi, xtol=math.sqrt(EPS),
-                          maxiter=control["max_iterations"])
-            if root > 0 and math.isfinite(root):
-                candidates.append(root)
-        except (ValueError, RuntimeError):
-            pass  # Keep the best finite parameter already evaluated.
-    candidate_radii = [L/lam + math.fsum(_log_cosh(lam*w)/lam) for lam in candidates]
-    chosen = int(np.argmin(candidate_radii))
-    lam = candidates[chosen]
-    K = math.fsum(_log_cosh(lam*w))
-    radii = dict(chernoff=candidate_radii[chosen], gaussian=r_gaussian,
-                 hoeffding=r_hoeffding, chebyshev=r_chebyshev)
+    # An explicit conservative inversion of Pinelis's Q bound, using Mills's ratio.
+    C_P = 5*math.sqrt(2*math.pi*math.e)*math.erf(1/math.sqrt(2))
+    # A lower bound for z avoids cancellation as alpha approaches one.
+    z = (math.sqrt(math.pi/2)*(1-alpha) if alpha > .9 else
+         -float(ndtri_exp(log_alpha-math.log(2))))
+    A = 1+C_P*(z+1/z)/(9+z*z)
+    r_pinelis = -sd*float(ndtri_exp(log_alpha-math.log(2)-math.log(A)))
+    # Tomaszewski gives a STRICT tail at one standard deviation.
+    r_tomaszewski = sd*(1+512*EPS) if alpha >= .5 else math.inf
+    radii = dict(chernoff=chernoff["radius"], binomial_p2=comparison["radius"],
+                 gaussian=r_gaussian, pinelis=r_pinelis, hoeffding=r_hoeffding,
+                 chebyshev=r_chebyshev, tomaszewski=r_tomaszewski)
     best = min(radii, key=radii.get)
     cushion = (control["mass_tol"]+256*EPS)*max(1, N)
     raw_kappa = mu*(1-radii[best])
@@ -241,20 +333,30 @@ def _concentration_calibration(scores, alpha, control, reason="general real scor
     if kappa >= 0:
         effective_kappa = kappa+control["mass_tol"]*max(1, N)
         r = (mu-effective_kappa)/mu
-        bounds = [math.log(2)+K-lam*r,
-                  math.log(2)+log_C+float(log_ndtr(-r/sd)),
+        x = r/sd
+        log_Q = float(np.logaddexp(log_ndtr(-x), math.log(C_P)-x*x/2
+                                  -math.log(2*math.pi)/2-math.log(9+x*x)))
+        bounds = [math.log(2)+chernoff["log_mgf"]-chernoff["lam"]*r,
+                  math.log(2)+log_C+float(log_ndtr(-x)), math.log(2)+log_Q,
                   math.log(2)-r*r/(2*variance), math.log(variance)-2*math.log(r)]
+        if math.isfinite(comparison["log_moment"]) and r > comparison["shift"]:
+            bounds.append(math.log(2)+comparison["log_moment"]
+                          -2*math.log(r-comparison["shift"]))
+        if r > sd:
+            bounds.append(-math.log(2))
         log_bound = min(0, *bounds)
         if math.isnan(log_bound) or log_bound > log_alpha:
             kappa, log_bound = -1.0, -math.inf
-    result = dict(support=np.asarray([kappa]), probabilities=np.asarray([1.0]),
+    return dict(support=np.asarray([kappa]), probabilities=np.asarray([1.0]),
                 rejection_probabilities=np.asarray([np.nan]), engine="concentration",
                 exact=False, bound_used=best, rejection_probability_bound=math.exp(log_bound),
                 log_rejection_probability_bound=log_bound, radius=mu*radii[best],
                 radius_fraction=radii[best], candidate_radii={k: mu*v for k,v in radii.items()},
-                numerical_cushion=cushion, fallback_reason=reason)
-    result["lambda"] = lam
-    return result
+                numerical_cushion=cushion, fallback_reason=reason,
+                **{"lambda": chernoff["lam"]},
+                lambda_candidates=chernoff["lambdas"],
+                chernoff_refinements=chernoff["refinements"],
+                chernoff_gap_bound=mu*chernoff["gap_bound"])
 
 
 # Convert a discrete score-sum distribution into the randomized signed-rank cutoff law.
