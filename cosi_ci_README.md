@@ -123,7 +123,7 @@ B is the smallest positive integer satisfying
 
 $$
 \left|\frac{B-q_B}{B}-\frac{1}{2}\right|\le\gamma,
-\qquad q_B<B,
+\qquad q_B \le B-1,
 \qquad q_B=\max\text{supp}(c^*_{B,\alpha/2}).
 $$
 
