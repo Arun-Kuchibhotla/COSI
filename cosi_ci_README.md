@@ -124,11 +124,11 @@ B is the smallest positive integer satisfying
 $$
 \left|\frac{B-q_B}{B}-\frac{1}{2}\right|\le\gamma,
 \qquad q_B<B,
-\qquad q_B=\max\operatorname{supp}(c^*_{B,\alpha/2}).
+\qquad q_B=\max\text{supp}(c^*_{B,\alpha/2}).
 $$
 
 Here the independently randomized binomial cutoff obeys
-$\mathbb{P}\{\operatorname{Bin}(B,1/2)\le c^*_{B,\alpha/2}\}=1-\alpha/2$.
+$\mathbb{P}\{\text{Bin}(B,1/2)\le c^*_{B,\alpha/2}\}=1-\alpha/2$.
 The search uses finite-sample quantile bounds to remove impossible ranges,
 then checks the remaining integers in increasing order. It does not assume
 that feasibility is monotone in B. B selection uses neither data values nor
@@ -330,7 +330,7 @@ Both symmetry and normality in `cosi_ci` call this helper.
 For general scores, it calibrates
 
 $$
-G=\sum_{i=1}^B h(i)\xi_i,\qquad \xi_i\overset{\mathrm{iid}}{\sim}\operatorname{Ber}(1/2),
+G=\sum_{i=1}^B h(i)\xi_i,\qquad \xi_i\overset{\mathrm{iid}}{\sim}\text{Ber}(1/2),
 $$
 
 using the two-sided probability
@@ -609,7 +609,7 @@ Define
 $$
 H(\lambda)=\lambda\psi'(\lambda)-\psi(\lambda),\qquad
 \psi'(\lambda)=\sum_i b_i\tanh(\lambda b_i),\qquad
-\psi''(\lambda)=\sum_i b_i^2\operatorname{sech}^2(\lambda b_i).
+\psi''(\lambda)=\sum_i b_i^2\text{sech}^2(\lambda b_i).
 $$
 
 Then $r'(\lambda)=\{H(\lambda)-L\}/\lambda^2$ and
@@ -622,7 +622,7 @@ closed-form inverse. For equal positive scores $b_i=b$, optimizing the
 tail bound at a fixed $x\in(0,mb)$ gives
 
 $$
-\lambda_x=\frac1b\operatorname{arctanh}\left(\frac{x}{mb}\right),\qquad
+\lambda_x=\frac1b\text{arctanh}\left(\frac{x}{mb}\right),\qquad
 \inf_{\lambda>0}e^{\psi(\lambda)-\lambda x}
 =\exp\left\{-m I\left(\frac{x}{mb}\right)\right\},
 $$
@@ -744,10 +744,10 @@ developed by Bentkus [4], imply the following. Set
 $$
 y=\max_i b_i,\qquad
 p=\frac{v}{my^2+v},\qquad d=y+\frac{v}{my},\qquad
-Y\sim\operatorname{Bin}(m,p),\qquad T=d(Y-mp).
+Y\sim\text{Bin}(m,p),\qquad T=d(Y-mp).
 $$
 
-Then $\operatorname{Var}(T)=v$ and, for all real $u$,
+Then $\text{Var}(T)=v$ and, for all real $u$,
 
 $$
 \mathbb{E}(S-u)_+^2\le\mathbb{E}(T-u)_+^2.
@@ -784,7 +784,7 @@ $u\in[k-1,k]$, define
 $$
 P_k=\mathbb{P}(Y\ge k),\qquad
 \mu_k=\mathbb{E}(Y\mid Y\ge k),\qquad
-s_k^2=\operatorname{Var}(Y\mid Y\ge k).
+s_k^2=\text{Var}(Y\mid Y\ge k).
 $$
 
 The first cell has lower endpoint $-\infty$. The objective is
@@ -811,12 +811,12 @@ For reference, the raw tail moments can be expressed through binomial tails:
 
 $$
 \mathbb{E}[Y\mathbf{1}\{Y\ge k\}]
-=mp\,\mathbb{P}\{\operatorname{Bin}(m-1,p)\ge k-1\},
+=mp\,\mathbb{P}\{\text{Bin}(m-1,p)\ge k-1\},
 $$
 
 $$
 \mathbb{E}[Y(Y-1)\mathbf{1}\{Y\ge k\}]
-=m(m-1)p^2\,\mathbb{P}\{\operatorname{Bin}(m-2,p)\ge k-2\}.
+=m(m-1)p^2\,\mathbb{P}\{\text{Bin}(m-2,p)\ge k-2\}.
 $$
 
 The second identity is used only for $m\ge2$. To avoid cancellation, the
