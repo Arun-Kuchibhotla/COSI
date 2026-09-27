@@ -159,10 +159,6 @@ cosi_kappa <- function(h, alpha = 0.05, seed = NULL, randomized = TRUE,
   out
 }
 
-# Add these four private helpers after .cosi_log_cosh in cosi_calibration.R,
-# then replace only .cosi_concentration_calibration with the definition below.
-# All other functions stay in place.
-
 # Compute the log MGF, lambda*psi'(lambda)-psi(lambda), and psi''(lambda).
 # Nonnegative weights and stable exponential formulas avoid cosh overflow.
 .cosi_rademacher_cgf <- function(weights, lambda) {
