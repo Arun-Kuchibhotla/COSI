@@ -233,7 +233,7 @@ and sort them lexicographically. With $Q_h$ the weighted quantile, the interval
 represents
 
 $$
-\{t: Q_h(c+)\prec(t,0)\prec Q_h(N_h-c)\}.
+{t: Q_h(c+)\prec(t,0)\prec Q_h(N_h-c)}.
 $$
 
 The lower quantile uses the right-hand limit, computed by a strict cumulative
