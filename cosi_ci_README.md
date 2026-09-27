@@ -756,8 +756,8 @@ $$
 Thus
 
 $$
-\mathbb{P}(S\ge x)\le P_2(T;x)
-:=\inf_{u<x}\frac{\mathbb{E}(T-u)_+^2}{(x-u)^2}.
+\mathbb{P}(S \ge x) \le P_2(T;x)
+:=\inf_{u<x} \frac{ \mathbb{E}(T-u)_+^2 }{(x-u)^2}.
 $$
 
 Our summands have skewness zero and kurtosis one. After division by $y$,
