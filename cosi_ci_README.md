@@ -750,7 +750,7 @@ $$
 Then $\text{Var}(T)=v$ and, for all real $u$,
 
 $$
-\mathbb{E}(S-u)_+^2\le\mathbb{E}(T-u)_+^2.
+\mathbb{E}(S-u)_+^2 \le \mathbb{E}(T-u)_+^2.
 $$
 
 Thus
