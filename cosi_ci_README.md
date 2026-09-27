@@ -211,7 +211,7 @@ or as the B+1 values h(0),...,h(B). These values must be finite, nonnegative,
 and nondecreasing, with **h(0)=0**. The zero-origin condition ensures
 
 $$
-\sum_{i\le j}\{h(j-i+1)-h(j-i)\}=\sum_{i=1}^B h(i)=N_h.
+\sum_{i\le j}(h(j-i+1)-h(j-i))=\sum_{i=1}^B h(i)=N_h.
 $$
 
 Normality fixes
@@ -308,7 +308,7 @@ endpoints as specified above. Its law records `engine="sign-binomial"`,
 `rejection_probability_bound`. The reported bound also covers the closed
 interval, which can have additional conservatism at ties.
 
-## 6. Public kappa-calibration helper
+## 6. kappa-calibration helper function
 
 ```r
 cosi_kappa(h, alpha=0.05, seed=NULL, randomized=TRUE,
@@ -334,7 +334,7 @@ G=\sum_{i=1}^B h(i)\xi_i,\qquad \xi_i\overset{\mathrm{iid}}{\sim}\text{Ber}(1/2)
 $$
 
 using the two-sided probability
-$P_h(c)=\mathbb{P}\{|G-N_h/2|\ge N_h/2-c\}$, with $P_h(-1)=0$.
+$P_h(c)=\mathbb{P}(|G-N_h/2|\ge N_h/2-c)$, with $P_h(-1)=0$.
 When exact calibration is feasible, adjacent critical values bracket alpha
 and are mixed with probability
 $(\alpha-P_h(c_-))/(P_h(c_+)-P_h(c_-))$ on $c_+$.
@@ -440,7 +440,7 @@ replaced by -1, yielding the whole real line. The final rejection bound is
 checked after accounting for the Walsh cumulative-weight tolerance. The
 binomial calculation uses log probabilities and a conditional-variance
 recurrence, and inflates its second moment by the factor
-$\exp\{256\varepsilon_{\mathrm{mach}}(m+1)\}$ before inversion and checking.
+$\exp(256\varepsilon_{\mathrm{mach}}(m+1))$ before inversion and checking.
 These safeguards use floating-point arithmetic; they are not
 arbitrary-precision certificates. The absolute part of the cutoff cushion
 can lead to the whole real line when all scores are extremely small.
@@ -600,7 +600,7 @@ $\lambda>0$,
 
 $$
 \mathbb{P}(|S|\ge r)
-\le 2\exp\{\psi(\lambda)-\lambda r\},\qquad
+\le 2\exp(\psi(\lambda)-\lambda r),\qquad
 r(\lambda)=\frac{L+\psi(\lambda)}{\lambda}.
 $$
 
@@ -612,7 +612,7 @@ H(\lambda)=\lambda\psi'(\lambda)-\psi(\lambda),\qquad
 \psi''(\lambda)=\sum_i b_i^2\text{sech}^2(\lambda b_i).
 $$
 
-Then $r'(\lambda)=\{H(\lambda)-L\}/\lambda^2$ and
+Then $r'(\lambda)=(H(\lambda)-L)/\lambda^2$ and
 $H'(\lambda)=\lambda\psi''(\lambda)>0$. Also $H(0)=0$ and
 $H(\infty)=m\log2$. Hence, when $L<m\log2$, there is a unique finite
 minimizer $\lambda_*$ characterized by $H(\lambda_*)=L$.
@@ -624,7 +624,7 @@ tail bound at a fixed $x\in(0,mb)$ gives
 $$
 \lambda_x=\frac1b\text{arctanh}\left(\frac{x}{mb}\right),\qquad
 \inf_{\lambda>0}e^{\psi(\lambda)-\lambda x}
-=\exp\left\{-m I\left(\frac{x}{mb}\right)\right\},
+=\exp\left(-m I\left(\frac{x}{mb}\right)\right),
 $$
 
 $$
@@ -697,7 +697,7 @@ Starting at $\lambda_0$, the code performs three explicit updates:
 $$
 \lambda_{j+1}
 =\sqrt{\lambda_j^2+
-\frac{2\{L-H(\lambda_j)\}}{\psi''(\lambda_j)}},\qquad j=0,1,2.
+\frac{2(L-H(\lambda_j))}{\psi''(\lambda_j)}},\qquad j=0,1,2.
 $$
 
 These are Newton steps in the variable $\lambda^2$, performed a fixed
@@ -769,8 +769,8 @@ binomial form is also studied in [5].
 For $\beta=\alpha/2>p^m$, define
 
 $$
-q_\beta=\min_{u<m}\left\{u+
-\sqrt{\frac{\mathbb{E}(Y-u)_+^2}{\beta}}\right\},\qquad
+q_\beta=\min_{u<m}\left(u+
+\sqrt{\frac{\mathbb{E}(Y-u)_+^2}{\beta}}\right),\qquad
 r_{\mathrm{bin}}=d(q_\beta-mp).
 $$
 
@@ -790,7 +790,7 @@ $$
 The first cell has lower endpoint $-\infty$. The objective is
 
 $$
-u+\sqrt{\frac{P_k}{\beta}\{(u-\mu_k)^2+s_k^2\}}.
+u+\sqrt{\frac{P_k}{\beta}((u-\mu_k)^2+s_k^2)}.
 $$
 
 If $P_k>\beta$ and $s_k^2>0$, its unconstrained minimizer and minimum are
@@ -810,13 +810,13 @@ below the guarded top-atom probability; the other candidates remain valid.
 For reference, the raw tail moments can be expressed through binomial tails:
 
 $$
-\mathbb{E}[Y\mathbf{1}\{Y\ge k\}]
-=mp\,\mathbb{P}\{\text{Bin}(m-1,p)\ge k-1\},
+\mathbb{E}[Y\mathbf{1}(Y\ge k)]
+=mp\,\mathbb{P}(\text{Bin}(m-1,p)\ge k-1),
 $$
 
 $$
-\mathbb{E}[Y(Y-1)\mathbf{1}\{Y\ge k\}]
-=m(m-1)p^2\,\mathbb{P}\{\text{Bin}(m-2,p)\ge k-2\}.
+\mathbb{E}[Y(Y-1)\mathbf{1}(Y\ge k)]
+=m(m-1)p^2\,\mathbb{P}(\text{Bin}(m-2,p)\ge k-2).
 $$
 
 The second identity is used only for $m\ge2$. To avoid cancellation, the
@@ -860,7 +860,7 @@ Pinelis [6, Theorem 1.1] proves, for $x>0$,
 $$
 \mathbb{P}(S/\sqrt v\ge x)\le Q(x)
 :=\overline\Phi(x)+C_P\frac{\phi(x)}{9+x^2},\qquad
-C_P=5\sqrt{2\pi e}\{2\Phi(1)-1\}\approx14.1068613.
+C_P=5\sqrt{2\pi e}(2\Phi(1)-1)\approx14.1068613.
 $$
 
 An explicit conservative inversion follows from the Mills-ratio bound
