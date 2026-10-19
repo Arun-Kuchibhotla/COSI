@@ -224,7 +224,6 @@ cosi_unimodal <- function(w, c = NULL, alpha = 0.05, seed = NULL, pilot = NULL){
 		w <- sort(w)
 		i <- seq_len(B - c)
 		gap <- w[i + c] - w[i]
-		return(list(CI = c(max(w[i] - gap,
-			min(w[i+c] + gap)), c = c))
+		return(list(CI = c(max(w[i] - gap, min(w[i+c] + gap)), c = c)))
 	}
 }
