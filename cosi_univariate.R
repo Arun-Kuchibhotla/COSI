@@ -134,6 +134,16 @@ cosi_median <- function(w, c = NULL, alpha = 0.05, seed = NULL){
 #   subdir = "weightedBernoulli",
 #   force = TRUE
 # )
+if (!requireNamespace("remotes", quietly = TRUE))
+  install.packages("remotes")
+
+remotes::install_github(
+  "Arun-Kuchibhotla/Weighted-Bernoulli",
+  subdir = "weightedBernoulli",
+  upgrade = "never"
+)
+
+library(weightedBernoulli)
 cosi_sym <- function(w, h, c = NULL, alpha = 0.05, seed = NULL) {
 	if (!is.null(seed)){
 		set.seed(seed)
@@ -200,7 +210,7 @@ cosi_unimodal <- function(w, c = NULL, alpha = 0.05, seed = NULL, pilot = NULL){
 	}
 	U <- runif(1)
 	if(!is.null(pilot)){
-		tmp <- abs(w - pilot)
+		gap <- abs(w - pilot)
 		lower <- sort(pmin(w, pilot) - (1 + sqrt(2)) * gap)
     upper <- sort(pmax(w, pilot) + (1 + sqrt(2)) * gap)
 		if(!is.null(c)){
