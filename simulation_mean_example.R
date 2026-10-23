@@ -1,5 +1,6 @@
 # Mean confidence interval simulations and plots from the saved CSV.
-# Keep this file beside your three supplied core R files.
+# Keep this file beside the core R files: 
+#    cosi_univariate.R, cosi1d.R, subsampling_CI.R.
 # Run once:
 #   source("simulation_mean_example.R")
 #   study <- run_mean_study(core_dir = ".", output_dir = "mean_simulation_results")
