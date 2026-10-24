@@ -1,0 +1,25 @@
+"scenario","n","gamma_hat.median","gamma_hat.q25.25%","gamma_hat.q75.75%"
+"1. Correlated Gaussian design", 100,1.2445011,0.8489247,1.6425294
+"2. Skewed design and errors", 100,1.2789683,0.8714683,1.7297100
+"3. Nonlinear mean, Student t(3) errors", 100,1.2861417,0.8589615,1.7983282
+"4. Nonlinear mean, skewed Pareto errors", 100,1.3415928,0.8827890,1.8030901
+"1. Correlated Gaussian design", 200,0.9618013,0.7800126,1.1622572
+"2. Skewed design and errors", 200,0.9436755,0.7248617,1.1573947
+"3. Nonlinear mean, Student t(3) errors", 200,0.9476570,0.7437088,1.2035257
+"4. Nonlinear mean, skewed Pareto errors", 200,0.9543142,0.7595928,1.1803141
+"1. Correlated Gaussian design", 300,0.9147738,0.7461458,1.1004353
+"2. Skewed design and errors", 300,0.8898252,0.6916762,1.1013754
+"3. Nonlinear mean, Student t(3) errors", 300,0.8960828,0.6818546,1.0671214
+"4. Nonlinear mean, skewed Pareto errors", 300,0.9117589,0.6835346,1.1076676
+"1. Correlated Gaussian design", 500,0.7352627,0.6126601,0.8616819
+"2. Skewed design and errors", 500,0.7284089,0.5804477,0.8671741
+"3. Nonlinear mean, Student t(3) errors", 500,0.7252802,0.5790746,0.8453840
+"4. Nonlinear mean, skewed Pareto errors", 500,0.7009241,0.5530081,0.8467410
+"1. Correlated Gaussian design", 750,0.7369534,0.6141960,0.8685702
+"2. Skewed design and errors", 750,0.6839555,0.5474413,0.8265532
+"3. Nonlinear mean, Student t(3) errors", 750,0.6772517,0.5466542,0.8114145
+"4. Nonlinear mean, skewed Pareto errors", 750,0.6566482,0.5283242,0.7896525
+"1. Correlated Gaussian design",1000,0.7176075,0.5996817,0.8278580
+"2. Skewed design and errors",1000,0.6807951,0.5412041,0.7978225
+"3. Nonlinear mean, Student t(3) errors",1000,0.6758089,0.5553927,0.8093997
+"4. Nonlinear mean, skewed Pareto errors",1000,0.6594310,0.5163093,0.7776216

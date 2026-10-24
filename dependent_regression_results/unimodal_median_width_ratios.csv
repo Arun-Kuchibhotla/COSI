@@ -1,0 +1,25 @@
+"scenario","n","method","width_ratio"
+"1. Correlated Gaussian design",100,"unimodal",14.3205317350399
+"2. Skewed design and errors",100,"unimodal",14.8930959134934
+"3. Nonlinear mean, Student t(3) errors",100,"unimodal",11.8888228613175
+"4. Nonlinear mean, skewed Pareto errors",100,"unimodal",11.4638351507354
+"1. Correlated Gaussian design",200,"unimodal",9.14755634864522
+"2. Skewed design and errors",200,"unimodal",9.18085022174403
+"3. Nonlinear mean, Student t(3) errors",200,"unimodal",8.81631691824757
+"4. Nonlinear mean, skewed Pareto errors",200,"unimodal",8.81616587796809
+"1. Correlated Gaussian design",300,"unimodal",8.81071081692642
+"2. Skewed design and errors",300,"unimodal",8.373759639709
+"3. Nonlinear mean, Student t(3) errors",300,"unimodal",8.55405774108461
+"4. Nonlinear mean, skewed Pareto errors",300,"unimodal",7.92667626150861
+"1. Correlated Gaussian design",500,"unimodal",8.96634386204047
+"2. Skewed design and errors",500,"unimodal",8.07430121299298
+"3. Nonlinear mean, Student t(3) errors",500,"unimodal",8.20673463989456
+"4. Nonlinear mean, skewed Pareto errors",500,"unimodal",7.97322974888854
+"1. Correlated Gaussian design",750,"unimodal",8.31602254813964
+"2. Skewed design and errors",750,"unimodal",7.84876892073166
+"3. Nonlinear mean, Student t(3) errors",750,"unimodal",7.86826051449667
+"4. Nonlinear mean, skewed Pareto errors",750,"unimodal",7.96183011749392
+"1. Correlated Gaussian design",1000,"unimodal",8.42031433777179
+"2. Skewed design and errors",1000,"unimodal",7.86377764365272
+"3. Nonlinear mean, Student t(3) errors",1000,"unimodal",8.28027495554132
+"4. Nonlinear mean, skewed Pareto errors",1000,"unimodal",7.99800286851668

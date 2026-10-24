@@ -1,0 +1,169 @@
+"scenario","n","method","status","count"
+"1. Correlated Gaussian design",100,"Bootstrap","ok",500
+"2. Skewed design and errors",100,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"Bootstrap","ok",500
+"1. Correlated Gaussian design",200,"Bootstrap","ok",500
+"2. Skewed design and errors",200,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"Bootstrap","ok",500
+"1. Correlated Gaussian design",300,"Bootstrap","ok",500
+"2. Skewed design and errors",300,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"Bootstrap","ok",500
+"1. Correlated Gaussian design",500,"Bootstrap","ok",500
+"2. Skewed design and errors",500,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"Bootstrap","ok",500
+"1. Correlated Gaussian design",750,"Bootstrap","ok",500
+"2. Skewed design and errors",750,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"Bootstrap","ok",500
+"1. Correlated Gaussian design",1000,"Bootstrap","ok",500
+"2. Skewed design and errors",1000,"Bootstrap","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"Bootstrap","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"Bootstrap","ok",500
+"1. Correlated Gaussian design",100,"HAC","ok",500
+"2. Skewed design and errors",100,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"HAC","ok",500
+"1. Correlated Gaussian design",200,"HAC","ok",500
+"2. Skewed design and errors",200,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"HAC","ok",500
+"1. Correlated Gaussian design",300,"HAC","ok",500
+"2. Skewed design and errors",300,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"HAC","ok",500
+"1. Correlated Gaussian design",500,"HAC","ok",500
+"2. Skewed design and errors",500,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"HAC","ok",500
+"1. Correlated Gaussian design",750,"HAC","ok",500
+"2. Skewed design and errors",750,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"HAC","ok",500
+"1. Correlated Gaussian design",1000,"HAC","ok",500
+"2. Skewed design and errors",1000,"HAC","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"HAC","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"HAC","ok",500
+"1. Correlated Gaussian design",100,"median","ok",500
+"2. Skewed design and errors",100,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"median","ok",500
+"1. Correlated Gaussian design",200,"median","ok",500
+"2. Skewed design and errors",200,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"median","ok",500
+"1. Correlated Gaussian design",300,"median","ok",500
+"2. Skewed design and errors",300,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"median","ok",500
+"1. Correlated Gaussian design",500,"median","ok",500
+"2. Skewed design and errors",500,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"median","ok",500
+"1. Correlated Gaussian design",750,"median","ok",500
+"2. Skewed design and errors",750,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"median","ok",500
+"1. Correlated Gaussian design",1000,"median","ok",500
+"2. Skewed design and errors",1000,"median","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"median","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"median","ok",500
+"1. Correlated Gaussian design",100,"normal","ok",500
+"2. Skewed design and errors",100,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"normal","ok",500
+"1. Correlated Gaussian design",200,"normal","ok",500
+"2. Skewed design and errors",200,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"normal","ok",500
+"1. Correlated Gaussian design",300,"normal","ok",500
+"2. Skewed design and errors",300,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"normal","ok",500
+"1. Correlated Gaussian design",500,"normal","ok",500
+"2. Skewed design and errors",500,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"normal","ok",500
+"1. Correlated Gaussian design",750,"normal","ok",500
+"2. Skewed design and errors",750,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"normal","ok",500
+"1. Correlated Gaussian design",1000,"normal","ok",500
+"2. Skewed design and errors",1000,"normal","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"normal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"normal","ok",500
+"1. Correlated Gaussian design",100,"Subsampling","ok",500
+"2. Skewed design and errors",100,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"Subsampling","ok",500
+"1. Correlated Gaussian design",200,"Subsampling","ok",500
+"2. Skewed design and errors",200,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"Subsampling","ok",500
+"1. Correlated Gaussian design",300,"Subsampling","ok",500
+"2. Skewed design and errors",300,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"Subsampling","ok",500
+"1. Correlated Gaussian design",500,"Subsampling","ok",500
+"2. Skewed design and errors",500,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"Subsampling","ok",500
+"1. Correlated Gaussian design",750,"Subsampling","ok",500
+"2. Skewed design and errors",750,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"Subsampling","ok",500
+"1. Correlated Gaussian design",1000,"Subsampling","ok",500
+"2. Skewed design and errors",1000,"Subsampling","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"Subsampling","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"Subsampling","ok",500
+"1. Correlated Gaussian design",100,"sym","ok",500
+"2. Skewed design and errors",100,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"sym","ok",500
+"1. Correlated Gaussian design",200,"sym","ok",500
+"2. Skewed design and errors",200,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"sym","ok",500
+"1. Correlated Gaussian design",300,"sym","ok",500
+"2. Skewed design and errors",300,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"sym","ok",500
+"1. Correlated Gaussian design",500,"sym","ok",500
+"2. Skewed design and errors",500,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"sym","ok",500
+"1. Correlated Gaussian design",750,"sym","ok",500
+"2. Skewed design and errors",750,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"sym","ok",500
+"1. Correlated Gaussian design",1000,"sym","ok",500
+"2. Skewed design and errors",1000,"sym","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"sym","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"sym","ok",500
+"1. Correlated Gaussian design",100,"unimodal","ok",500
+"2. Skewed design and errors",100,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",100,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",100,"unimodal","ok",500
+"1. Correlated Gaussian design",200,"unimodal","ok",500
+"2. Skewed design and errors",200,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",200,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",200,"unimodal","ok",500
+"1. Correlated Gaussian design",300,"unimodal","ok",500
+"2. Skewed design and errors",300,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",300,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",300,"unimodal","ok",500
+"1. Correlated Gaussian design",500,"unimodal","ok",500
+"2. Skewed design and errors",500,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",500,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",500,"unimodal","ok",500
+"1. Correlated Gaussian design",750,"unimodal","ok",500
+"2. Skewed design and errors",750,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",750,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",750,"unimodal","ok",500
+"1. Correlated Gaussian design",1000,"unimodal","ok",500
+"2. Skewed design and errors",1000,"unimodal","ok",500
+"3. Nonlinear mean, Student t(3) errors",1000,"unimodal","ok",500
+"4. Nonlinear mean, skewed Pareto errors",1000,"unimodal","ok",500
