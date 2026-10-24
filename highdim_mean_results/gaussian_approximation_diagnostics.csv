@@ -1,0 +1,29 @@
+"idx","scenario","d","gaussian_coverage","gaussian_cdf_KS","probability_any_shock","mom_groups","scale_floored"
+1,"1. Correlated Gaussian",10,0.942,0.0570268742044294,0,3,0
+1,"1. Correlated Gaussian",30,0.94,0.0329209713979508,0,3,0
+1,"1. Correlated Gaussian",100,0.944,0.0400127952731151,0,3,0
+1,"1. Correlated Gaussian",300,0.938,0.0346866080045597,0,3,0
+1,"1. Correlated Gaussian",1000,0.928,0.0265623654165976,0,3,0
+1,"1. Correlated Gaussian",3000,0.962,0.0296711309365918,0,3,0
+1,"1. Correlated Gaussian",10000,0.954,0.0842522493692758,0,3,0
+2,"2. Symmetric heavy tails",10,0.916,0.161149306398755,0,3,0
+2,"2. Symmetric heavy tails",30,0.812,0.138972156715738,0,3,0
+2,"2. Symmetric heavy tails",100,0.7,0.266374264580969,0,3,0
+2,"2. Symmetric heavy tails",300,0.394,0.56913687720677,0,3,0
+2,"2. Symmetric heavy tails",1000,0.078,0.87859735563881,0,3,0
+2,"2. Symmetric heavy tails",3000,0.002,0.983716316999237,0,3,0
+2,"2. Symmetric heavy tails",10000,0,0.999987770423815,0,3,0
+3,"3. Rare symmetric shocks",10,0.808,0.180722188937537,0.642,3,0
+3,"3. Rare symmetric shocks",30,0.394,0.556373746828356,0.652,3,0
+3,"3. Rare symmetric shocks",100,0.388,0.60998034037209,0.612,3,0
+3,"3. Rare symmetric shocks",300,0.394,0.606,0.606,3,0
+3,"3. Rare symmetric shocks",1000,0.386,0.614,0.614,3,0
+3,"3. Rare symmetric shocks",3000,0.37,0.63,0.63,3,0
+3,"3. Rare symmetric shocks",10000,0.314,0.686,0.686,3,0
+4,"4. Rare asymmetric shocks",10,0.9,0.123433955821941,1,3,0
+4,"4. Rare asymmetric shocks",30,0.79,0.192008754256163,1,3,0
+4,"4. Rare asymmetric shocks",100,0.708,0.356550273040294,1,3,0
+4,"4. Rare asymmetric shocks",300,0.484,0.552694810269805,1,3,0
+4,"4. Rare asymmetric shocks",1000,0.298,0.744699504021126,1,3,0
+4,"4. Rare asymmetric shocks",3000,0.122,0.856762429787509,1,3,0
+4,"4. Rare asymmetric shocks",10000,0.01,0.955321415798557,1,3,0

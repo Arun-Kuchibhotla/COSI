@@ -1,0 +1,197 @@
+"scenario","d","method","coverage"
+"1. Correlated Gaussian",10,"Gaussian",0.942
+"2. Symmetric heavy tails",10,"Gaussian",0.916
+"3. Rare symmetric shocks",10,"Gaussian",0.808
+"4. Rare asymmetric shocks",10,"Gaussian",0.9
+"1. Correlated Gaussian",30,"Gaussian",0.94
+"2. Symmetric heavy tails",30,"Gaussian",0.812
+"3. Rare symmetric shocks",30,"Gaussian",0.394
+"4. Rare asymmetric shocks",30,"Gaussian",0.79
+"1. Correlated Gaussian",100,"Gaussian",0.944
+"2. Symmetric heavy tails",100,"Gaussian",0.7
+"3. Rare symmetric shocks",100,"Gaussian",0.388
+"4. Rare asymmetric shocks",100,"Gaussian",0.708
+"1. Correlated Gaussian",300,"Gaussian",0.938
+"2. Symmetric heavy tails",300,"Gaussian",0.394
+"3. Rare symmetric shocks",300,"Gaussian",0.394
+"4. Rare asymmetric shocks",300,"Gaussian",0.484
+"1. Correlated Gaussian",1000,"Gaussian",0.928
+"2. Symmetric heavy tails",1000,"Gaussian",0.078
+"3. Rare symmetric shocks",1000,"Gaussian",0.386
+"4. Rare asymmetric shocks",1000,"Gaussian",0.298
+"1. Correlated Gaussian",3000,"Gaussian",0.962
+"2. Symmetric heavy tails",3000,"Gaussian",0.002
+"3. Rare symmetric shocks",3000,"Gaussian",0.37
+"4. Rare asymmetric shocks",3000,"Gaussian",0.122
+"1. Correlated Gaussian",10000,"Gaussian",0.954
+"2. Symmetric heavy tails",10000,"Gaussian",0
+"3. Rare symmetric shocks",10000,"Gaussian",0.314
+"4. Rare asymmetric shocks",10000,"Gaussian",0.01
+"1. Correlated Gaussian",10,"Empirical",0.932
+"2. Symmetric heavy tails",10,"Empirical",0.96
+"3. Rare symmetric shocks",10,"Empirical",0.974
+"4. Rare asymmetric shocks",10,"Empirical",0.166
+"1. Correlated Gaussian",30,"Empirical",0.93
+"2. Symmetric heavy tails",30,"Empirical",0.978
+"3. Rare symmetric shocks",30,"Empirical",0.916
+"4. Rare asymmetric shocks",30,"Empirical",0.028
+"1. Correlated Gaussian",100,"Empirical",0.934
+"2. Symmetric heavy tails",100,"Empirical",0.982
+"3. Rare symmetric shocks",100,"Empirical",0.934
+"4. Rare asymmetric shocks",100,"Empirical",0
+"1. Correlated Gaussian",300,"Empirical",0.92
+"2. Symmetric heavy tails",300,"Empirical",0.98
+"3. Rare symmetric shocks",300,"Empirical",0.904
+"4. Rare asymmetric shocks",300,"Empirical",0
+"1. Correlated Gaussian",1000,"Empirical",0.888
+"2. Symmetric heavy tails",1000,"Empirical",0.988
+"3. Rare symmetric shocks",1000,"Empirical",0.908
+"4. Rare asymmetric shocks",1000,"Empirical",0
+"1. Correlated Gaussian",3000,"Empirical",0.91
+"2. Symmetric heavy tails",3000,"Empirical",0.998
+"3. Rare symmetric shocks",3000,"Empirical",0.86
+"4. Rare asymmetric shocks",3000,"Empirical",0
+"1. Correlated Gaussian",10000,"Empirical",0.896
+"2. Symmetric heavy tails",10000,"Empirical",0.994
+"3. Rare symmetric shocks",10000,"Empirical",0.84
+"4. Rare asymmetric shocks",10000,"Empirical",0
+"1. Correlated Gaussian",10,"Multiplier",0.932
+"2. Symmetric heavy tails",10,"Multiplier",0.962
+"3. Rare symmetric shocks",10,"Multiplier",0.972
+"4. Rare asymmetric shocks",10,"Multiplier",0.1
+"1. Correlated Gaussian",30,"Multiplier",0.934
+"2. Symmetric heavy tails",30,"Multiplier",0.976
+"3. Rare symmetric shocks",30,"Multiplier",0.904
+"4. Rare asymmetric shocks",30,"Multiplier",0.002
+"1. Correlated Gaussian",100,"Multiplier",0.936
+"2. Symmetric heavy tails",100,"Multiplier",0.958
+"3. Rare symmetric shocks",100,"Multiplier",0.936
+"4. Rare asymmetric shocks",100,"Multiplier",0
+"1. Correlated Gaussian",300,"Multiplier",0.924
+"2. Symmetric heavy tails",300,"Multiplier",0.938
+"3. Rare symmetric shocks",300,"Multiplier",0.9
+"4. Rare asymmetric shocks",300,"Multiplier",0
+"1. Correlated Gaussian",1000,"Multiplier",0.888
+"2. Symmetric heavy tails",1000,"Multiplier",0.952
+"3. Rare symmetric shocks",1000,"Multiplier",0.904
+"4. Rare asymmetric shocks",1000,"Multiplier",0
+"1. Correlated Gaussian",3000,"Multiplier",0.912
+"2. Symmetric heavy tails",3000,"Multiplier",0.97
+"3. Rare symmetric shocks",3000,"Multiplier",0.86
+"4. Rare asymmetric shocks",3000,"Multiplier",0
+"1. Correlated Gaussian",10000,"Multiplier",0.904
+"2. Symmetric heavy tails",10000,"Multiplier",0.938
+"3. Rare symmetric shocks",10000,"Multiplier",0.836
+"4. Rare asymmetric shocks",10000,"Multiplier",0
+"1. Correlated Gaussian",10,"median_empirical",0.946
+"2. Symmetric heavy tails",10,"median_empirical",0.956
+"3. Rare symmetric shocks",10,"median_empirical",0.958
+"4. Rare asymmetric shocks",10,"median_empirical",0.74
+"1. Correlated Gaussian",30,"median_empirical",0.94
+"2. Symmetric heavy tails",30,"median_empirical",0.946
+"3. Rare symmetric shocks",30,"median_empirical",0.956
+"4. Rare asymmetric shocks",30,"median_empirical",0.76
+"1. Correlated Gaussian",100,"median_empirical",0.93
+"2. Symmetric heavy tails",100,"median_empirical",0.946
+"3. Rare symmetric shocks",100,"median_empirical",0.936
+"4. Rare asymmetric shocks",100,"median_empirical",0.764
+"1. Correlated Gaussian",300,"median_empirical",0.932
+"2. Symmetric heavy tails",300,"median_empirical",0.948
+"3. Rare symmetric shocks",300,"median_empirical",0.964
+"4. Rare asymmetric shocks",300,"median_empirical",0.744
+"1. Correlated Gaussian",1000,"median_empirical",0.962
+"2. Symmetric heavy tails",1000,"median_empirical",0.95
+"3. Rare symmetric shocks",1000,"median_empirical",0.942
+"4. Rare asymmetric shocks",1000,"median_empirical",0.726
+"1. Correlated Gaussian",3000,"median_empirical",0.96
+"2. Symmetric heavy tails",3000,"median_empirical",0.952
+"3. Rare symmetric shocks",3000,"median_empirical",0.946
+"4. Rare asymmetric shocks",3000,"median_empirical",0.762
+"1. Correlated Gaussian",10000,"median_empirical",0.946
+"2. Symmetric heavy tails",10000,"median_empirical",0.962
+"3. Rare symmetric shocks",10000,"median_empirical",0.958
+"4. Rare asymmetric shocks",10000,"median_empirical",0.726
+"1. Correlated Gaussian",10,"mp_empirical",1
+"2. Symmetric heavy tails",10,"mp_empirical",1
+"3. Rare symmetric shocks",10,"mp_empirical",1
+"4. Rare asymmetric shocks",10,"mp_empirical",0.992
+"1. Correlated Gaussian",30,"mp_empirical",1
+"2. Symmetric heavy tails",30,"mp_empirical",1
+"3. Rare symmetric shocks",30,"mp_empirical",1
+"4. Rare asymmetric shocks",30,"mp_empirical",0.998
+"1. Correlated Gaussian",100,"mp_empirical",1
+"2. Symmetric heavy tails",100,"mp_empirical",1
+"3. Rare symmetric shocks",100,"mp_empirical",1
+"4. Rare asymmetric shocks",100,"mp_empirical",1
+"1. Correlated Gaussian",300,"mp_empirical",1
+"2. Symmetric heavy tails",300,"mp_empirical",1
+"3. Rare symmetric shocks",300,"mp_empirical",1
+"4. Rare asymmetric shocks",300,"mp_empirical",1
+"1. Correlated Gaussian",1000,"mp_empirical",1
+"2. Symmetric heavy tails",1000,"mp_empirical",1
+"3. Rare symmetric shocks",1000,"mp_empirical",1
+"4. Rare asymmetric shocks",1000,"mp_empirical",1
+"1. Correlated Gaussian",3000,"mp_empirical",1
+"2. Symmetric heavy tails",3000,"mp_empirical",1
+"3. Rare symmetric shocks",3000,"mp_empirical",1
+"4. Rare asymmetric shocks",3000,"mp_empirical",1
+"1. Correlated Gaussian",10000,"mp_empirical",1
+"2. Symmetric heavy tails",10000,"mp_empirical",1
+"3. Rare symmetric shocks",10000,"mp_empirical",1
+"4. Rare asymmetric shocks",10000,"mp_empirical",1
+"1. Correlated Gaussian",10,"median_mom",0.946
+"2. Symmetric heavy tails",10,"median_mom",0.96
+"3. Rare symmetric shocks",10,"median_mom",0.952
+"4. Rare asymmetric shocks",10,"median_mom",0.742
+"1. Correlated Gaussian",30,"median_mom",0.94
+"2. Symmetric heavy tails",30,"median_mom",0.958
+"3. Rare symmetric shocks",30,"median_mom",0.962
+"4. Rare asymmetric shocks",30,"median_mom",0.786
+"1. Correlated Gaussian",100,"median_mom",0.95
+"2. Symmetric heavy tails",100,"median_mom",0.938
+"3. Rare symmetric shocks",100,"median_mom",0.942
+"4. Rare asymmetric shocks",100,"median_mom",0.692
+"1. Correlated Gaussian",300,"median_mom",0.952
+"2. Symmetric heavy tails",300,"median_mom",0.956
+"3. Rare symmetric shocks",300,"median_mom",0.956
+"4. Rare asymmetric shocks",300,"median_mom",0.746
+"1. Correlated Gaussian",1000,"median_mom",0.962
+"2. Symmetric heavy tails",1000,"median_mom",0.954
+"3. Rare symmetric shocks",1000,"median_mom",0.954
+"4. Rare asymmetric shocks",1000,"median_mom",0.748
+"1. Correlated Gaussian",3000,"median_mom",0.956
+"2. Symmetric heavy tails",3000,"median_mom",0.956
+"3. Rare symmetric shocks",3000,"median_mom",0.952
+"4. Rare asymmetric shocks",3000,"median_mom",0.772
+"1. Correlated Gaussian",10000,"median_mom",0.952
+"2. Symmetric heavy tails",10000,"median_mom",0.97
+"3. Rare symmetric shocks",10000,"median_mom",0.944
+"4. Rare asymmetric shocks",10000,"median_mom",0.746
+"1. Correlated Gaussian",10,"mp_mom",1
+"2. Symmetric heavy tails",10,"mp_mom",1
+"3. Rare symmetric shocks",10,"mp_mom",1
+"4. Rare asymmetric shocks",10,"mp_mom",0.982
+"1. Correlated Gaussian",30,"mp_mom",1
+"2. Symmetric heavy tails",30,"mp_mom",1
+"3. Rare symmetric shocks",30,"mp_mom",1
+"4. Rare asymmetric shocks",30,"mp_mom",0.996
+"1. Correlated Gaussian",100,"mp_mom",1
+"2. Symmetric heavy tails",100,"mp_mom",0.998
+"3. Rare symmetric shocks",100,"mp_mom",1
+"4. Rare asymmetric shocks",100,"mp_mom",1
+"1. Correlated Gaussian",300,"mp_mom",1
+"2. Symmetric heavy tails",300,"mp_mom",1
+"3. Rare symmetric shocks",300,"mp_mom",1
+"4. Rare asymmetric shocks",300,"mp_mom",1
+"1. Correlated Gaussian",1000,"mp_mom",1
+"2. Symmetric heavy tails",1000,"mp_mom",1
+"3. Rare symmetric shocks",1000,"mp_mom",1
+"4. Rare asymmetric shocks",1000,"mp_mom",1
+"1. Correlated Gaussian",3000,"mp_mom",1
+"2. Symmetric heavy tails",3000,"mp_mom",1
+"3. Rare symmetric shocks",3000,"mp_mom",1
+"4. Rare asymmetric shocks",3000,"mp_mom",1
+"1. Correlated Gaussian",10000,"mp_mom",1
+"2. Symmetric heavy tails",10000,"mp_mom",1
+"3. Rare symmetric shocks",10000,"mp_mom",1
+"4. Rare asymmetric shocks",10000,"mp_mom",1
