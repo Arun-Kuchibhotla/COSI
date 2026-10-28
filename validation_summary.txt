@@ -1,0 +1,11 @@
+PASS: 144000 unique records; 500 replications per cell and method.
+PASS: saved coverage and median summaries reproduce from raw CSV.
+PASS: paired HulC denominators; grid sizes; randomized cutoff ranges.
+PASS: original simulation source hashes were verified before presentation revisions.
+NOTE: the driver plotting function was later revised; simulation algorithms and CSVs are unchanged.
+PASS: 60 full-resampling method records reproduce with independent base-R PAVA.
+PASS: all 288 coverage points remain inside revised panel frames; percentage ticks are unique.
+PASS: all 20 report figures use [h]; references resolve and report text does not overflow.
+PASS: raw CSVs, simulation RDS files and core computational functions are byte-for-byte unchanged.
+PASS: report sections flow without explicit page breaks; all 12 illustrations precede the method sections.
+PASS: bootstrap coverage ranges and paired HulC width comparisons were rechecked against the saved CSVs.
