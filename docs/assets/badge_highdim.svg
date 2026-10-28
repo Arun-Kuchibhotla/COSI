@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="161" height="28" viewBox="0 0 161 28" role="img" aria-label="High dimension">
+<rect x=".5" y=".5" width="160" height="27" rx="7" fill="#F2EBFC" stroke="#D5C3ED"/>
+<circle cx="14" cy="14" r="3.8" fill="#6940A5"/>
+<text x="25" y="18.5" fill="#6940A5" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="600">High dimension</text>
+</svg>

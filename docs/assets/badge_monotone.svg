@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="169" height="28" viewBox="0 0 169 28" role="img" aria-label="Monotone bands">
+<rect x=".5" y=".5" width="168" height="27" rx="7" fill="#E6F5F7" stroke="#B8DBDF"/>
+<circle cx="14" cy="14" r="3.8" fill="#006C76"/>
+<text x="25" y="18.5" fill="#006C76" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="600">Monotone bands</text>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="28" viewBox="0 0 132 28" role="img" aria-label="Regression">
+<rect x=".5" y=".5" width="131" height="27" rx="7" fill="#E8F7F0" stroke="#B4DDCE"/>
+<circle cx="14" cy="14" r="3.8" fill="#006F55"/>
+<text x="25" y="18.5" fill="#006F55" font-family="DejaVu Sans, Arial, sans-serif" font-size="12" font-weight="600">Regression</text>
+</svg>
