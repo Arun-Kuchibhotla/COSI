@@ -12,7 +12,7 @@ banner = '''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="190" vi
 <rect x="820" y="20" width="350" height="150" rx="14" fill="#E2F3EC"/>
 <path d="M18 2H450" stroke="#0072B2" stroke-width="4"/><path d="M450 2H770" stroke="#009E73" stroke-width="4"/><path d="M770 2H1020" stroke="#7B2CBF" stroke-width="4"/><path d="M1020 2H1182" stroke="#D55E00" stroke-width="4"/>
 <g font-family="sans-serif">
- <text x="40" y="53" font-size="13" letter-spacing="2.5" font-weight="700" fill="#006F68">CONFIDENCE THROUGH STRUCTURE</text>
+ <text x="40" y="53" font-size="13" letter-spacing="2.5" font-weight="700" fill="#006F68">CONFIDENCE THROUGH SCALE INVARIANCE</text>
  <text x="40" y="99" font-size="32" font-weight="700" fill="#163A54">Split data. Estimate. Combine.</text>
  <text x="40" y="140" font-size="19" fill="#486578">Scalar intervals, vector sets, and monotone bands</text>
 </g>
